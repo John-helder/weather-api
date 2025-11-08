@@ -1,0 +1,23 @@
+# Ambiente virtual
+venv/
+.env
+
+# Cache e metadados
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# Banco de dados local
+*.db
+
+# IDEs e sistema
+.vscode/
+.idea/
+.DS_Store
+
+# Arquivos temporários
+*.tmp
+*.bak
+*.swp
