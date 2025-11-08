@@ -1,25 +1,40 @@
-import sqlite3
+import psycopg2
+from psycopg2 import sql
+from dotenv import load_dotenv
+import os
 
-DB_NAME = "app/data/weather.db"
+load_dotenv()
+
+DB_USER = os.getenv("DB_USER")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 def create_connection():
-    conn = sqlite3.connect("app/data/weather.db")
+    conn = psycopg2.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD
+    )
     return conn
 
 def create_table():
     conn = create_connection()
     cursor = conn.cursor()
 
-    cursor.execute('''
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS weather (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            city TEXT,
+            id SERIAL PRIMARY KEY,
+            city VARCHAR(100),
             temperature REAL,
             humidity INTEGER,
-            description TEXT,
-            date TEXT
+            description VARCHAR(255),
+            date TIMESTAMP
         )
-    ''')
+    """)
 
     conn.commit()
     conn.close()
@@ -28,21 +43,19 @@ def insert_weather_data(city, temperature, humidity, description, date):
     conn = create_connection()
     cursor = conn.cursor()
 
-    cursor.execute('''
+    cursor.execute("""
         INSERT INTO weather (city, temperature, humidity, description, date)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (city, temperature, humidity, description, date))
+        VALUES (%s, %s, %s, %s, %s)
+    """, (city, temperature, humidity, description, date))
 
     conn.commit()
     conn.close()
 
 def get_all_weather_data():
-    conn = sqlite3.connect(DB_NAME)
+    conn = create_connection()
     cursor = conn.cursor()
-
     cursor.execute("SELECT * FROM weather")
     rows = cursor.fetchall()
-
     conn.close()
 
     data = [
@@ -57,3 +70,7 @@ def get_all_weather_data():
         for row in rows
     ]
     return data
+
+if __name__ == "__main__":
+    create_table()
+    print(" Tabela 'weather' criada (ou já existia).")

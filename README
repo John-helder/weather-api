@@ -1,18 +1,19 @@
 # 🌤️ Extraindo Dados Meteorológicos com FastAPI
 
-Este projeto tem como objetivo **coletar, armazenar e disponibilizar dados meteorológicos** de diferentes cidades utilizando **Python, FastAPI e SQLite**.  
+Este projeto tem como objetivo ***coletar, armazenar e disponibilizar dados meteorológicos*** de diferentes cidades utilizando **Python, FastAPI e SQLite**.  
 A aplicação consome dados de uma API externa, salva as informações localmente em um banco de dados e disponibiliza endpoints REST para consulta e gerenciamento.
 
 ---
 
-## 🧩 Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 
-- **Python 3.11+**
-- **FastAPI** – Framework moderno para criação de APIs
-- **SQLite** – Banco de dados local leve
-- **Uvicorn** – Servidor ASGI para rodar a aplicação
-- **Requests** – Consumo de dados de APIs externas
-- **Dotenv** – Gerenciamento de variáveis de ambiente
+- Python 3.10+
+- FastAPI
+- Uvicorn
+- Requests
+- PostgreSQL
+- psycopg2
+- dotenv
 
 ---
 
@@ -21,31 +22,27 @@ A aplicação consome dados de uma API externa, salva as informações localment
 📁 extraindo-dados/
 │
 ├── app/
-│ ├── api.py # Endpoints da API FastAPI
-│ ├── database.py # Conexão e operações com o banco de dados SQLite
-│ ├── dataWeather.py # Função que busca e salva os dados meteorológicos
-│ ├── main.py # Script inicial para criar a tabela e popular o banco
-│ ├── init.py
-│ └── data/
-│ └── weather.db # Banco de dados local (ignorado no Git)
+│ ├── api.py # Endpoints da aplicação (FastAPI)
+│ ├── database.py # Conexão e operações no PostgreSQL
+│ ├── dataWeather.py # Integração com API externa de clima
+│ ├── main.py # Script inicial para criar a tabela e popular o banco (dispensável)
 │
 ├── .env # Variáveis de ambiente (API keys, configs)
-├── .gitignore # Arquivos e pastas ignoradas pelo Git
 ├── requirements.txt # Dependências do projeto
 └── README.md # Documentação do projeto
 
 
 ---
 
-## ⚙️ Instalação e Configuração
+## 🧠 Instalação e Configuração
 
 1. **Clone o repositório:**
    git clone https://github.com/seu-usuario/extraindo-dados.git
    cd extraindo-dados
 
-2. **Crie o ambiente virtual:**
+2. **Crie e ative o ambiente virtual:**
 
-python -m venv venv
+python -m venv venv # (Cria o ambiente)
 venv\Scripts\activate   # (Windows)
 source venv/bin/activate  # (Linux/Mac)
 
@@ -53,9 +50,14 @@ source venv/bin/activate  # (Linux/Mac)
 
 pip install -r requirements.txt
 
-4. **Crie o arquivo .env e adicione suas variáveis, por exemplo:**
+4. **Crie o arquivo .env com suas credenciais PostgreSQL:**
 
-WEATHER_API_KEY=sua_chave_aqui
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=fastweather #(Exemplo)
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+
 
 5. **Execute a aplicação:**
 
@@ -70,33 +72,37 @@ Swagger UI → http://127.0.0.1:8000/docs
 **🧠 Funcionalidades**
 
 ✅ Buscar dados meteorológicos de uma cidade específica
-✅ Salvar os dados no banco de dados local (SQLite)
+✅ Salvar os dados no banco de dados PostgreSQL
 ✅ Consultar todos os registros armazenados
 ✅ API documentada automaticamente via Swagger
 
 **📡 Endpoints Principais**
 
-🔹 GET /weather?city=NomeDaCidade
-Busca os dados meteorológicos da cidade informada e os salva no banco de dados.
-Exemplo de uso (Insomnia ou navegador):
-http://127.0.0.1:8000/weather?city=Florianopolis
+| Método  | Endpoint       | Descrição                                                  |
+| :------ | :------------- | :--------------------------------------------------------- |
+| **GET** | `/weather`     | Consulta dados climáticos de uma cidade (e salva no banco) |
+| **GET** | `/weather/all` | Retorna todos os registros salvos no PostgreSQL            |
 
 
-**Resposta de sucesso:**
+
+**💾 Exemplo de Resposta /weather?city=Florianopolis**
 
 {
   "message": "Dados de Florianopolis salvos com sucesso!"
 }
 
-**🧱 Estrutura do Banco de Dados**
-| Campo        | Tipo      | Descrição                            |
-|---------------|-----------|--------------------------------------|
-| id            | INTEGER   | Identificador único (autoincremento) |
-| city          | TEXT      | Nome da cidade                       |
-| temperature   | REAL      | Temperatura atual                    |
-| humidity      | INTEGER   | Umidade do ar (%)                    |
-| description   | TEXT      | Descrição do clima                   |
-| date          | TEXT      | Data e hora da coleta                |
+**🧱 Banco de Dados (PostgreSQL)**
+A tabela weather é criada automaticamente no primeiro uso:
+
+#CREATE TABLE IF NOT EXISTS weather (
+#    id SERIAL PRIMARY KEY,
+#    city VARCHAR(100),
+#    temperature REAL,
+#    humidity INTEGER,
+#    description VARCHAR(255),
+#    date TIMESTAMP
+#);
+    
 
 
 **🚀 Próximos Passos (Melhorias Futuras)**
@@ -104,7 +110,7 @@ http://127.0.0.1:8000/weather?city=Florianopolis
  - Adicionar autenticação por token
  - Implementar filtros por cidade e data
  - Criar dashboard com visualização dos dados
- - Integrar com banco de dados em nuvem (ex: PostgreSQL, AWS RDS)
+ - Containerizar com Docker.
 
 👨‍💻 Autor
 
