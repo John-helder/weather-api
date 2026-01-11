@@ -1,6 +1,6 @@
 # 🌤️ Extraindo Dados Meteorológicos com FastAPI
 
-Este projeto tem como objetivo ***coletar, armazenar e disponibilizar dados meteorológicos*** de diferentes cidades utilizando **Python, FastAPI e SQLite**.  
+Este projeto tem como objetivo ***coletar, armazenar e disponibilizar dados meteorológicos*** de diferentes cidades utilizando **Python, FastAPI e PostgreSQL**.  
 A aplicação consome dados de uma API externa, salva as informações localmente em um banco de dados e disponibiliza endpoints REST para consulta e gerenciamento.
 
 ---
@@ -19,45 +19,63 @@ A aplicação consome dados de uma API externa, salva as informações localment
 
 ## 📂 Estrutura do Projeto
 
-📁 extraindo-dados/
+extraindo-dados/
 │
 ├── app/
-│ ├── api.py # Endpoints da aplicação (FastAPI)
-│ ├── database.py # Conexão e operações no PostgreSQL
-│ ├── dataWeather.py # Integração com API externa de clima
-│ ├── main.py # Script inicial para criar a tabela e popular o banco (dispensável)
+│   ├── api.py          # Endpoints da aplicação (FastAPI)
+│   ├── database.py     # Conexão e operações no PostgreSQL
+│   ├── dataWeather.py  # Integração com API externa de clima
+│   └── main.py         # Script auxiliar para criação/população inicial do banco
 │
-├── .env # Variáveis de ambiente (API keys, configs)
-├── requirements.txt # Dependências do projeto
-└── README.md # Documentação do projeto
-
+├── .env.example        # Exemplo de variáveis de ambiente
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
 
 ---
 
 ## 🧠 Instalação e Configuração
 
 1. **Clone o repositório:**
-   git clone https://github.com/seu-usuario/extraindo-dados.git
+   ```git clone https://github.com/seu-usuario/extraindo-dados.git```
    cd extraindo-dados
 
 2. **Crie e ative o ambiente virtual:**
 
-python -m venv venv # (Cria o ambiente)
-venv\Scripts\activate   # (Windows)
-source venv/bin/activate  # (Linux/Mac)
+python -m venv venv
+  # (bash)
+venv\Scripts\activate
+  # (Windows)
+source venv/bin/activate
+  # (Linux/Mac)
+
 
 3. **Instale as dependências:**
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
-4. **Crie o arquivo .env com suas credenciais PostgreSQL:**
+4. **Crie um arquivo .env baseado no .env.example:**
 
+# API de clima
+API_KEY=your_api_key_here
+
+# Banco de Dados PostgreSQL
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=fastweather #(Exemplo)
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
+DB_NAME=weather_data
+DB_USER=postgres
+DB_PASSWORD=your_password
 
+⚠️ Variáveis de ambiente
+
+As variáveis sensíveis não são versionadas por segurança.
+Para executar corretamente, crie um arquivo .env baseado no .env.example, contendo:
+- Chave da API de clima
+- Credenciais do banco PostgreSQL
+- Essas variáveis devem estar disponíveis no ambiente antes da execução da aplicação.
+
+---
 
 5. **Execute a aplicação:**
 
@@ -68,6 +86,31 @@ DB_PASSWORD=sua_senha
 Obs: verifique no seu terminal a porta que sua api está sendo rodada, a minha está rodando na 8000
 Ex:
 Swagger UI → http://127.0.0.1:8000/docs
+
+---
+
+## 🐳 Executando com Docker (Recomendado)
+
+Este projeto está totalmente containerizado, facilitando a execução sem necessidade de configurar ambiente local ou banco de dados manualmente.
+
+▶️ Subir a aplicação com Docker Compose
+```docker-compose up --build```
+
+🧪 Teste rápido do container
+```docker run -p 8000:8000 weather-api```
+Se aparecer algo como:
+
+```Uvicorn running on http://0.0.0.0:8000```
+✅ O Docker está funcionando corretamente.
+
+Após a inicialização:
+API disponível em:
+👉 http://localhost:8000
+
+Swagger UI:
+👉 http://localhost:8000/docs
+
+---
 
 **🧠 Funcionalidades**
 
@@ -118,10 +161,9 @@ John Helder
 Desenvolvedor promissor que curte dados e soluções inteligentes.
 📧 johnheldercs@gmail.com
 
-💼 LinkedIn: https://www.linkedin.com/in/john-helder
+💼 [LinkedIn](https://www.linkedin.com/in/john-helder)
 
 
 📝 Licença
 
 Este projeto está sob a licença MIT.
-Sinta-se à vontade para usar, modificar e compartilhar. 😊

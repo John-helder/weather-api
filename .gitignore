@@ -1,23 +1,44 @@
-# Ambiente virtual
+
+# Python
+
+__pycache__/
+*.py[cod]
+*.log
+
+
+# Ambiente virtual e variáveis
+
 venv/
 .env
 
-# Cache e metadados
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.log
+
+# Docker
+
+*.tar
+*.tar.gz
+
 
 # Banco de dados local
+
 *.db
 
+
+# Testes e coverage
+
+.coverage
+htmlcov/
+.pytest_cache/
+
+
 # IDEs e sistema
+
 .vscode/
 .idea/
 .DS_Store
 
+
 # Arquivos temporários
+
 *.tmp
 *.bak
 *.swp
